@@ -1,0 +1,20 @@
+@extends('layouts.app')
+@section('navbar')
+@if(Auth::guest())
+@include('layouts.partial.top-navbar')
+@else
+@include('layouts.partial.main-header') 
+@endif
+@endsection
+@section('main-sidebar')
+@if(Auth::user())
+@include('layouts.partial.main-sidebar')
+@endif
+@endsection
+{{ $searchJob }}
+@endsection
+@section('control-sidebar')
+@if(Auth::user())
+@include('layouts.partial.control-sidebar')
+@endif
+@endsection
