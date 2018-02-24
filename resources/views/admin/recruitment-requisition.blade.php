@@ -238,7 +238,7 @@ $("#message").show().fadeOut(3000).queue(function(n) {
                       <input type="checkbox" value="S5" name="referral" class="flat-red" > Referral 
                     </label>
               </div>
-                  </div>
+              </div>
             </div>
           </div>
         <!-- /.box-body -->
