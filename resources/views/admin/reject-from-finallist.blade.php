@@ -12,9 +12,6 @@
 @endif
 @endsection
 @section('main-content')
-@if($university || $gender || $salary || $company || $designation)
-<p><a id="back-button" href="{{ url('/admin/company/reject-from-interview'.'/'.$jobItemIds.'/'.str_slug($title)) }}"><i class="fa fa-arrow-left"></i> Back</a></p>
-@endif
 <div id="toggle" class="navbar-fixed-top" style="text-align: center;"> 
 <div id="message"></div>
 </div>
@@ -84,7 +81,21 @@
           <div class="box box-primary">
             <div class="box-body box-profile">
 
-              @include('admin.layouts.partial.search-tab-menu')
+              <p class="text-muted text-center"><i class="fa fa-search"></i> Search Enginge</p>
+
+              <ul class="list-group list-group-unbordered">
+                <li class="list-group-item">
+                  <b>Search Option </b> <a class="pull-right">1</a>
+                </li>
+                <li class="list-group-item">
+                  <b>Search Option </b> <a class="pull-right">2</a>
+                </li>
+                <li class="list-group-item">
+                  <b>Search Option </b> <a class="pull-right">3</a>
+                </li>
+              </ul>
+
+              <a href="#" class="btn btn-primary btn-block"><b>Submit</b></a>
             </div>
             <!-- /.box-body -->
           </div>
@@ -97,10 +108,7 @@
             <ul class="nav nav-tabs">
               <li class="active"><a href="#activity" data-toggle="tab" class="text-aqua">Applicants</a></li>
                <li><a class="text-green" href="{{action('Dashboard\Main@downloadExcelFromFinalList',$jobItemIds)}}">Download <i class="fa fa-file-excel-o text-green"></i></a></li>
-               <li class="pull-right"><a class="text-red" href="{{ url('/admin/company/reject-from-finallist'.'/'.$jobItemIds.'/'.str_slug($title)) }}"><i class="fa fa-ban" aria-hidden="true"></i> Reject Application ({{ $job_applicants_reject_number }})</a></li>
-               <li>
-                 @include('admin.layouts.partial.search-tab-container')
-               </li>
+               <li class="pull-right"><a class="text-red" href="{{ url('/admin/company/final-list'.'/'.$jobItemIds.'/'.str_slug($title)) }}"><i class="fa fa-ban" aria-hidden="true"></i> Reject Application ({{ $job_applicants_reject_number }})</a></li>
             </ul>
             @foreach ($job_applicants as $applicants)
             <div class="tab-content tab-custom-border">
@@ -191,9 +199,6 @@
               
             </div>
             <!-- /.nav-tabs-custom -->
-            <div class="pull-right">
-              {{ $job_applicants->links() }}
-            </div>
           </div>
           <!--col-md-10-->
         </div>

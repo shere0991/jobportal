@@ -8,11 +8,10 @@
 @section('main-content')
   <div class="tile">
 <center>
-    <span>Login to <strong class="text-aqua">MADINA GROUP</strong></span>
+    <span>Login to <strong class="text-aqua">Feemaa Tech</strong></span>
 </center>
-  <div class="tile-header text-center"><br>
-    {{-- <h2 style="color: white; opacity: .75; font-size: 4rem; display: flex; justify-content: center; align-items: center; text-align: center; height: 100%;"><small></small>Job Portal</h2> --}}
-    <img src="{{ asset('storage/admin/madina-group.png') }}" alt="Logo">
+  <div class="tile-header">
+    <h2 style="color: white; opacity: .75; font-size: 4rem; display: flex; justify-content: center; align-items: center; text-align: center; height: 100%;"><small></small>Job Portal</h2>
   </div>
   
   <div class="tile-body">

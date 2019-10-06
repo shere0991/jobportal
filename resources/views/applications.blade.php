@@ -60,7 +60,7 @@
 
                   <div class="input-group">
                     <div class="input-group-addon">
-                      <span>৳</span>
+                      <i class="fa fa-dollar"></i>
                     </div>
                     <input type="hidden" name="job_post_id" id="job_post_id" value="{{ $ids }}">
                     <input type="hidden" name="user_id" id="user_id" value="{{ Auth::user()->id }}" class="form-control">

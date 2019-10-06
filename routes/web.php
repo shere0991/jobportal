@@ -44,7 +44,6 @@ Route::post('admin/logout', 'LoginController@logout')->name('admin.logout');
 // Registration Routes...
 Route::get('admin/register', 'RegisterController@showRegistrationForm')->name('admin.register');
 Route::post('admin/register', 'RegisterController@register');
-Route::post('admin/deleteApplicants','Main@deleteApplicants');
 
 // Password Reset Routes...
 Route::get('admin-passwords/reset', 'ForgotPasswordController@showLinkRequestForm')->name('admin.password.request');
@@ -130,21 +129,6 @@ Route::get('admin/reject','Main@reject');
 // archive
 Route::get('admin/job-archive','Main@jobArchive');
 Route::get('admin/archive','Main@archive');
-
-
-// Report Generate
-Route::get('admin/recruitment-requisition','ReportGenerateController@recruitment_requisition');
-Route::get('admin/interview-ratings','ReportGenerateController@interview_ratings');
-Route::get('admin/summary-for-cv-shorting','ReportGenerateController@summary_for_cv_shorting');
-Route::get('admin/candidate-information_score','ReportGenerateController@candidate_information_score');
-Route::get('admin/interview-final-approval','ReportGenerateController@interview_final_approval');
-Route::get('admin/recruitment-final-approval-dmd','ReportGenerateController@recruitment_final_approval_dmd');
-Route::get('admin/recruitment-final-approval-director','ReportGenerateController@recruitment_final_approval_director');
-Route::get('admin/final-status-report','ReportGenerateController@final_status_report');
-Route::get('admin/recruitment-status-report','ReportGenerateController@recruitment_status_report');
-Route::post('admin/submit_requisition_form_1','ReportGenerateController@submit_requisition_form_1');
-Route::post('admin/submit_requisition_form_2','ReportGenerateController@submit_requisition_form_2');
-Route::post('admin/submit_requisition_form_3','ReportGenerateController@submit_requisition_form_3');
 // Route::get('admin','AdminHome@index');
 Route::get('admin', 'AdminHome@index')->name('admin.home');
 });

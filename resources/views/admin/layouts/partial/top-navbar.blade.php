@@ -1,8 +1,8 @@
 <header class="main-header">
-    <nav class="navbar navbar-static-top fixed-top">
+    <nav class="navbar navbar-static-top">
       <div class="container">
         <div class="navbar-header">
-          <a href="{{ url('admin') }}" class="navbar-brand">Madina Group</a>
+          <a href="{{ url('admin') }}" class="navbar-brand">Feemaa Tech</a>
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
             <i class="fa fa-bars"></i>
           </button>

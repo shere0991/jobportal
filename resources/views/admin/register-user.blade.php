@@ -39,11 +39,6 @@
     color:#fff !important;
     border:1px solid #fff !important;
   }
-
-  table.dataTable tbody td {
-    word-break: break-word;
-    vertical-align: top;
-}
 </style>
 @endpush
 @section('main-content')
@@ -53,7 +48,7 @@
       <!-- Small boxes (Stat box) -->
       <div class="box" id="load_table">
           <div class="box-header with-border">
-          <h3 class="box-title">CV Bank</h3>
+          <h3 class="box-title">Register User</h3>
           <div class="box-tools pull-right">
             <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
                     title="Collapse">
@@ -64,7 +59,7 @@
         </div>
             <!-- /.box-header -->
             <div class="box-body">
-              <table id="example1" class="table table-bordered table-striped display"  cellspacing="0" width="100%">
+              <table id="example1" class="table table-bordered table-striped display nowrap"  cellspacing="0" width="100%">
                 <thead id="load_head">
                 <tr>
                   <th>S.No.</th>
@@ -74,7 +69,6 @@
                   <th>Email</th>
                   <th>Phone</th>
                   <th>University</th>
-                  <th>Delete</th>
                   {{-- <th>Delete</th> --}}
                 </tr>
                 </thead>
@@ -84,13 +78,12 @@
                   @php $i++; @endphp
                     <tr>
                       <td>{{ $i }}</td>
-                      <td><img style="width:60px;height:70px;" class="img-responsive" src="{{ asset('storage/employee_photo/'.$user->Photo) }}"></td>
+                      <td><img class="img-responsive" src="{{ asset('storage/employee_photo/'.$user->Photo) }}"></td>
                       <td>{{ $user->FirstName }} {{ $user->LastName }}</td>
                       <td>{{ $user->Possition }}</td>
                       <td>{{ $user->email }}</td>
                       <td>{{ $user->Phone }}</td>
-                      <td>{{ $user->Institution }}</p></td>
-                      <td><a class="btn btn-xs btn-danger" onclick="deleteApplicants('{{ $user->id }}')"><i class="fa fa-trash"></i></a></td>
+                      <td>{{ $user->Institution }}</td>
                       {{-- <td><a href="" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a></td> --}}
                     </tr>   
                   @endforeach
@@ -217,22 +210,6 @@ function deleteCompany(i){
           // $('#load_table').load(location.href+' #load_table');
           location.href="{{ url('admin/add-company') }}";
   })
-};
-
-function deleteApplicants(i){
-  $.post('deleteApplicants',{'id':i,'_token':$('input[name=_token]').val()},function(response){
-    console.log(response);
-    if (response.data=='success') {
-      // $('#deleted'+i).html("");
-      // $('#deleted'+i).html('<i class="fa fa-trash"></i>');
-      // $('#example1').load(location.href+' #example1');
-      location.href='{{ url('admin/register_user') }}';
-      $('#message').html('<div class="callout callout-danger text-center"><h4>Reminder!</h4>Record deleted successfully!</div>');
-          $("#message").show().fadeOut(3000).queue(function(n) {   
-          $(this).hide(); n();
-          });   
-    } 
-  });
 }
 </script>
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/dataTables.buttons.min.js"></script>

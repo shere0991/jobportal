@@ -59,7 +59,7 @@ h1, h2, h3, h4, h5, h6 {
   background: #3C8DBC;
   background-position: center;
   background-size: cover;
-  /*height: 12rem;*/
+  height: 12rem;
 }
 .tile .tile-body {
   padding: 2rem;

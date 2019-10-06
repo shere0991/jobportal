@@ -32,8 +32,6 @@
 <script src="{{ asset('/components/dist/js/adminlte.min.js') }}"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="{{ asset('/components/dist/js/demo.js') }}"></script>
-<!-- Search Tab -->
-<script type="text/javascript" src="{{ asset('js/search-tab.js') }}"></script>
 <!-- Page script -->
 <script>
   $(function () {

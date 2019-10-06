@@ -12,9 +12,6 @@
 @endif
 @endsection
 @section('main-content')
-@if($university || $gender || $salary || $company || $designation)
-<p><a id="back-button" href="{{ url('/admin/company/interview'.'/'.$jobItemIds.'/'.str_slug($title)) }}"><i class="fa fa-arrow-left"></i> Back</a></p>
-@endif
 <div id="toggle" class="navbar-fixed-top" style="text-align: center;"> 
 <div id="message"></div>
 </div>
@@ -26,25 +23,7 @@
 
             <div class="col-md-4">
               <p><strong>Job Status</strong></p>
-              @foreach ($allJobs as $j)
-                  @php
-                    $datetime1 = new DateTime($j->ApplicationDeadline);
-                    $datetime2 = new DateTime($j->created_at);
-                     $interval1 = $datetime1->diff($datetime2);
-                     $d1=$interval1->format('%a');
-
-                    $datetime3 = new DateTime(date('Y-m-d'));
-                    $datetime4 = new DateTime($j->created_at);
-                    $interval2 = $datetime3->diff($datetime4);
-                    $d2=$interval2->format('%a');
-                    
-                    if ($d2>$d1) {
-                      echo '<p class="text-red"><i class="fa fa-circle text-red"></i> Expired</p>';
-                    }else{
-                       echo '<p class="text-green"><i class="fa fa-circle text-green"></i>Active</p>';
-                    }
-                  @endphp
-                @endforeach
+              <p class="text-green"><i class="fa fa-circle text-success"></i> Active</p>
             </div>
             <div class="col-md-4">
               <p><strong>Published On</strong></p>
@@ -102,7 +81,21 @@
           <div class="box box-primary">
             <div class="box-body box-profile">
 
-             @include('admin.layouts.partial.search-tab-menu')
+              <p class="text-muted text-center"><i class="fa fa-search"></i> Search Enginge</p>
+
+              <ul class="list-group list-group-unbordered">
+                <li class="list-group-item">
+                  <b>Search Option </b> <a class="pull-right">1</a>
+                </li>
+                <li class="list-group-item">
+                  <b>Search Option </b> <a class="pull-right">2</a>
+                </li>
+                <li class="list-group-item">
+                  <b>Search Option </b> <a class="pull-right">3</a>
+                </li>
+              </ul>
+
+              <a href="#" class="btn btn-primary btn-block"><b>Submit</b></a>
             </div>
             <!-- /.box-body -->
           </div>
@@ -116,9 +109,6 @@
               <li class="active"><a href="#activity" data-toggle="tab" class="text-green">Applicants</a></li>
                <li><a class="text-green" href="{{action('Dashboard\Main@downloadExcelFromInterview',$jobItemIds)}}">Download <i class="fa fa-file-excel-o text-green"></i></a></li>
                 <li class="pull-right"><a class="text-red" href="{{ url('/admin/company/reject-from-interview'.'/'.$jobItemIds.'/'.str_slug($title)) }}"><i class="fa fa-ban" aria-hidden="true"></i> Reject Application ({{ $job_applicants_reject_number }})</a></li>
-                <li>
-                  @include('admin.layouts.partial.search-tab-container')
-                </li>
             </ul>
             @foreach ($job_applicants as $applicants)
             <div class="tab-content tab-custom-border">
@@ -175,7 +165,6 @@
                     </div>
                     <!-- /.col -->
                   </div>
-                  
                   <!-- /.post -->
 
                   <ul class="list-inline">
@@ -209,7 +198,6 @@
               
             </div>
             <!-- /.nav-tabs-custom -->
-            <div class="pull-right">{{ $job_applicants->links() }}</div>
           </div>
           <!--col-md-10-->
         </div>

@@ -26,7 +26,7 @@ class Main extends Controller
 	public function __construct()
     {
         $this->middleware('auth:admin');
-        $this->middleware('admin');
+        // $this->middleware('admin');
     }
 
     public function registerUser(){
@@ -109,9 +109,7 @@ class Main extends Controller
     	return response()->json(array('data'=>'success'));
     	}
     }
-    /*
-    We had created a function called single_company. This function is responsible for fetching company list. This company list will be displayed /appeared on single-company page.
-    */
+    
     public function single_company(Request $request){
 		$companies=Company::join('job_posts','job_posts.company_id','=','companies.id')->where('company_id',$request->company)->get();
 		$company_name='';
@@ -164,35 +162,13 @@ class Main extends Controller
 
 	public function application(Request $request){
 		$jobIds=$request->jobIds;
-		$university=$request->university;
-		$gender=$request->gender;
-		$salary=$request->salary;
-		$company=$request->company;
-		$designation=$request->designation;
     	$allJobs=JobPost::where('id',$jobIds)->where('deleted',0)->get();
     	$ShortList=ShortList::where('job_post_id',$jobIds)->where('deleted',0)->count();
     	$Interview=Interview::where('job_post_id',$jobIds)->where('deleted',0)->count();
     	$FinalList=FinalList::where('job_post_id',$jobIds)->where('deleted',0)->count();
    		$applications=Application::where('job_post_id',$jobIds)->count();
-
-   		if ($request->has('university')) {
-   		$job_applicants=Application::join('users','users.id','=','applications.user_id')->where('job_post_id',$jobIds)->where('Institution','LIKE','%'.$request->university.'%')->where('deleted',0)->paginate(10);
-   		}elseif ($request->has('gender')) {
-   			$job_applicants=Application::join('users','users.id','=','applications.user_id')->where('job_post_id',$jobIds)->where('gender',$request->gender)->where('deleted',0)->paginate(10);
-   		}elseif($request->has('salary')){
-   			$job_applicants=Application::join('users','users.id','=','applications.user_id')->where('job_post_id',$jobIds)->where('ExpectedSalary',$request->salary)->where('deleted',0)->paginate(10);
-   		}
-   		elseif($request->has('Company',$request->company)){
-   			$job_applicants=Application::join('users','users.id','=','applications.user_id')->where('job_post_id',$jobIds)->where('Company','LIKE','%'.$request->company.'%')->where('deleted',0)->paginate(10);
-   		}elseif ($request->has('designation')) {
-   			$job_applicants=Application::join('users','users.id','=','applications.user_id')->where('job_post_id',$jobIds)->where('Possition','LIKE','%'.$request->designation.'%')->where('deleted',0)->paginate(10);
-   		}
-   		else{
-
-   		$job_applicants=Application::join('users','users.id','=','applications.user_id')->where('job_post_id',$jobIds)->where('deleted',0)->paginate(10);
-   		}
-
-   		$job_applicants_reject=Application::join('users','users.id','=','applications.user_id')->where('job_post_id',$jobIds)->where('status',1)->where('deleted',1)->count();
+   		$job_applicants=Application::join('users','users.id','=','applications.user_id')->where('job_post_id',$jobIds)->where('deleted',0)->get();
+   		$job_applicants_reject=Application::join('users','users.id','=','applications.user_id')->where('job_post_id',$jobIds)->where('status',0)->where('deleted',1)->count();
 
     	$published_date="";
     	$title="";
@@ -207,43 +183,18 @@ class Main extends Controller
         $published_on=date_format($published,"l j \ F Y");
     	$JobTitle=$title;
     	$shortL=ShortList::where('job_post_id',$jobIds)->get();
-    	return view('admin.applications')->with(array('allJobs'=>$allJobs,'title'=>$title,'jobItemIds'=>$jobItemIds,'jobIds'=>$jobIds,'applications'=>$applications,'JobTitle'=>$JobTitle,'published_on'=>$published_on,'ShortList'=>$ShortList,'Interview'=>$Interview,'FinalList'=>$FinalList,'job_applicants'=>$job_applicants,'job_applicants_reject'=>$job_applicants_reject,'university'=>$university, 'gender'=>$gender,'salary'=>$salary,'company'=>$company,'designation'=>$designation));
+    	return view('admin.applications')->with(array('allJobs'=>$allJobs,'title'=>$title,'jobItemIds'=>$jobItemIds,'jobIds'=>$jobIds,'applications'=>$applications,'JobTitle'=>$JobTitle,'published_on'=>$published_on,'ShortList'=>$ShortList,'Interview'=>$Interview,'FinalList'=>$FinalList,'job_applicants'=>$job_applicants,'job_applicants_reject'=>$job_applicants_reject));
 	}
 
 	public function reject_applicants_list_from_application(Request $request){
 		$jobIds=$request->jobIds;
-		$university=$request->university;
-		$gender=$request->gender;
-		$salary=$request->salary;
-		$company=$request->company;
-		$designation=$request->designation;
     	$allJobs=JobPost::where('id',$jobIds)->where('deleted',0)->get();
     	$ShortList=ShortList::where('job_post_id',$jobIds)->where('deleted',0)->count();
     	$Interview=Interview::where('job_post_id',$jobIds)->where('deleted',0)->count();
     	$FinalList=FinalList::where('job_post_id',$jobIds)->where('deleted',0)->count();
    		$applications=Application::where('job_post_id',$jobIds)->count();
-
-   		// $job_applicants=Application::join('users','users.id','=','applications.user_id')->where('job_post_id',$jobIds)->where('status',0)->where('deleted',1)->get();
-
-   		if ($request->has('university')) {
-   			
-   		$job_applicants=Application::join('users','users.id','=','applications.user_id')->where('job_post_id',$jobIds)->where('Institution','LIKE','%'.$request->university.'%')->where('deleted',1)->paginate(10);
-   		}elseif ($request->has('gender')) {
-   			$job_applicants=Application::join('users','users.id','=','applications.user_id')->where('job_post_id',$jobIds)->where('gender',$request->gender)->where('deleted',1)->paginate(10);
-   		}elseif($request->has('salary')){
-   			$job_applicants=Application::join('users','users.id','=','applications.user_id')->where('job_post_id',$jobIds)->where('ExpectedSalary',$request->salary)->where('deleted',1)->paginate(10);
-   		}
-   		elseif($request->has('Company',$request->company)){
-   			$job_applicants=Application::join('users','users.id','=','applications.user_id')->where('job_post_id',$jobIds)->where('Company','LIKE','%'.$request->company.'%')->where('deleted',1)->paginate(10);
-   		}elseif ($request->has('designation')) {
-   			$job_applicants=Application::join('users','users.id','=','applications.user_id')->where('job_post_id',$jobIds)->where('Possition','LIKE','%'.$request->designation.'%')->where('deleted',1)->paginate(10);
-   		}
-   		else{
-
-   		$job_applicants=Application::join('users','users.id','=','applications.user_id')->where('job_post_id',$jobIds)->where('deleted',1)->paginate(10);
-   		}
-
-   		$job_applicants_reject_number=Application::join('users','users.id','=','applications.user_id')->where('job_post_id',$jobIds)->where('status',1)->where('deleted',1)->count();
+   		$job_applicants=Application::join('users','users.id','=','applications.user_id')->where('job_post_id',$jobIds)->where('status',0)->where('deleted',1)->get();
+   		$job_applicants_reject_number=Application::join('users','users.id','=','applications.user_id')->where('job_post_id',$jobIds)->where('status',0)->where('deleted',1)->count();
 
     	$published_date="";
     	$title="";
@@ -258,7 +209,7 @@ class Main extends Controller
         $published_on=date_format($published,"l j \ F Y");
     	$JobTitle=$title;
     	$shortL=ShortList::where('job_post_id',$jobIds)->get();
-    	return view('admin.reject-from-application')->with(array('allJobs'=>$allJobs,'title'=>$title,'jobItemIds'=>$jobItemIds,'jobIds'=>$jobIds,'applications'=>$applications,'JobTitle'=>$JobTitle,'published_on'=>$published_on,'ShortList'=>$ShortList,'Interview'=>$Interview,'FinalList'=>$FinalList,'job_applicants'=>$job_applicants,'job_applicants_reject_number'=>$job_applicants_reject_number,'university'=>$university, 'gender'=>$gender,'salary'=>$salary,'company'=>$company,'designation'=>$designation));
+    	return view('admin.reject-from-application')->with(array('allJobs'=>$allJobs,'title'=>$title,'jobItemIds'=>$jobItemIds,'jobIds'=>$jobIds,'applications'=>$applications,'JobTitle'=>$JobTitle,'published_on'=>$published_on,'ShortList'=>$ShortList,'Interview'=>$Interview,'FinalList'=>$FinalList,'job_applicants'=>$job_applicants,'job_applicants_reject_number'=>$job_applicants_reject_number));
 	}
 
 
@@ -377,36 +328,12 @@ class Main extends Controller
 
 	 public function shortList(Request $request){
 		$jobIds=$request->jobIds;
-		$university=$request->university;
-		$gender=$request->gender;
-		$salary=$request->salary;
-		$company=$request->company;
-		$designation=$request->designation;
     	$allJobs=JobPost::where('id',$jobIds)->where('deleted',0)->get();
     	$ShortList=ShortList::where('job_post_id',$jobIds)->where('deleted',0)->count();
     	$Interview=Interview::where('job_post_id',$jobIds)->where('deleted',0)->count();
     	$FinalList=FinalList::where('job_post_id',$jobIds)->where('deleted',0)->count();
    		$applications=Application::where('job_post_id',$jobIds)->count();
-
-   		// $job_applicants=ShortList::join('users','users.id','=','short_lists.user_id')->where('job_post_id',$jobIds)->where('deleted',0)->get();
-   		if ($request->has('university')) {
-   			
-   		$job_applicants=ShortList::join('users','users.id','=','short_lists.user_id')->where('job_post_id',$jobIds)->where('Institution','LIKE','%'.$request->university.'%')->where('deleted',0)->paginate(10);
-   		}elseif ($request->has('gender')) {
-   			$job_applicants=ShortList::join('users','users.id','=','short_lists.user_id')->where('job_post_id',$jobIds)->where('gender',$request->gender)->where('deleted',0)->paginate(10);
-   		}elseif($request->has('salary')){
-   			$job_applicants=ShortList::join('users','users.id','=','short_lists.user_id')->where('job_post_id',$jobIds)->where('ExpectedSalary',$request->salary)->where('deleted',0)->paginate(10);
-   		}
-   		elseif($request->has('Company',$request->company)){
-   			$job_applicants=ShortList::join('users','users.id','=','short_lists.user_id')->where('job_post_id',$jobIds)->where('Company','LIKE','%'.$request->company.'%')->where('deleted',0)->paginate(10);
-   		}elseif ($request->has('designation')) {
-   			$job_applicants=ShortList::join('users','users.id','=','short_lists.user_id')->where('job_post_id',$jobIds)->where('Possition','LIKE','%'.$request->designation.'%')->where('deleted',0)->paginate(10);
-   		}
-   		else{
-
-   		$job_applicants=ShortList::join('users','users.id','=','short_lists.user_id')->where('job_post_id',$jobIds)->where('deleted',0)->paginate(10);
-   		}
-
+   		$job_applicants=ShortList::join('users','users.id','=','short_lists.user_id')->where('job_post_id',$jobIds)->where('deleted',0)->get();
    		$job_applicants_reject_number=ShortList::join('users','users.id','=','short_lists.user_id')->where('job_post_id',$jobIds)->where('status',0)->where('deleted',1)->count();
    		// return $salary=ShortList::join('applications','applications.user_id','=','short_lists.user_id')->where('applications.job_post_id',$jobIds)->get();
        	
@@ -424,16 +351,11 @@ class Main extends Controller
         $published_on=date_format($published,"l j \ F Y");
     	$JobTitle=$title;
     	$shortL=ShortList::where('job_post_id',$jobIds)->get();
-    	return view('admin.short-list')->with(array('allJobs'=>$allJobs,'jobItemIds'=>$jobItemIds,'title'=>$title,'jobIds'=>$jobIds,'applications'=>$applications,'JobTitle'=>$JobTitle,'published_on'=>$published_on,'ShortList'=>$ShortList,'Interview'=>$Interview,'FinalList'=>$FinalList,'job_applicants'=>$job_applicants,'job_applicants_reject_number'=>$job_applicants_reject_number,'university'=>$university, 'gender'=>$gender,'salary'=>$salary,'company'=>$company,'designation'=>$designation));
+    	return view('admin.short-list')->with(array('allJobs'=>$allJobs,'jobItemIds'=>$jobItemIds,'title'=>$title,'jobIds'=>$jobIds,'applications'=>$applications,'JobTitle'=>$JobTitle,'published_on'=>$published_on,'ShortList'=>$ShortList,'Interview'=>$Interview,'FinalList'=>$FinalList,'job_applicants'=>$job_applicants,'job_applicants_reject_number'=>$job_applicants_reject_number));
 	}
 
 	public function reject_applicants_list_from_shortlist(Request $request){
 		$jobIds=$request->jobIds;
-		$university=$request->university;
-		$gender=$request->gender;
-		$salary=$request->salary;
-		$company=$request->company;
-		$designation=$request->designation;
     	$allJobs=JobPost::where('id',$jobIds)->where('deleted',0)->get();
     	$ShortList=ShortList::where('job_post_id',$jobIds)->where('deleted',0)->count();
     	$Interview=Interview::where('job_post_id',$jobIds)->where('deleted',0)->count();
@@ -441,26 +363,8 @@ class Main extends Controller
    		$applications=Application::where('job_post_id',$jobIds)->count();
    		$job_applicants_reject_number=ShortList::join('users','users.id','=','short_lists.user_id')->where('job_post_id',$jobIds)->where('status',0)->where('deleted',1)->count();
 
-   		// $job_applicants=ShortList::join('users','users.id','=','short_lists.user_id')->where('job_post_id',$jobIds)->where('status',0)->where('deleted',1)->get();
+   		$job_applicants=ShortList::join('users','users.id','=','short_lists.user_id')->where('job_post_id',$jobIds)->where('status',0)->where('deleted',1)->get();
    		// return $salary=ShortList::join('applications','applications.user_id','=','short_lists.user_id')->where('applications.job_post_id',$jobIds)->get();
-   		
-      if ($request->has('university')) {
-   			
-   		$job_applicants=ShortList::join('users','users.id','=','short_lists.user_id')->where('job_post_id',$jobIds)->where('Institution','LIKE','%'.$request->university.'%')->where('deleted',1)->paginate(10);
-   		}elseif ($request->has('gender')) {
-   			$job_applicants=ShortList::join('users','users.id','=','short_lists.user_id')->where('job_post_id',$jobIds)->where('gender',$request->gender)->where('deleted',1)->paginate(10);
-   		}elseif($request->has('salary')){
-   			$job_applicants=ShortList::join('users','users.id','=','short_lists.user_id')->where('job_post_id',$jobIds)->where('ExpectedSalary',$request->salary)->where('deleted',1)->paginate(10);
-   		}
-   		elseif($request->has('Company',$request->company)){
-   			$job_applicants=ShortList::join('users','users.id','=','short_lists.user_id')->where('job_post_id',$jobIds)->where('Company','LIKE','%'.$request->company.'%')->where('deleted',1)->paginate(10);
-   		}elseif ($request->has('designation')) {
-   			$job_applicants=ShortList::join('users','users.id','=','short_lists.user_id')->where('job_post_id',$jobIds)->where('Possition','LIKE','%'.$request->designation.'%')->where('deleted',1)->paginate(10);
-   		}
-   		else{
-
-   		$job_applicants=ShortList::join('users','users.id','=','short_lists.user_id')->where('job_post_id',$jobIds)->where('deleted',1)->paginate(10);
-   		}
        	
        	$checkUserAndJob=ShortList::where('job_post_id',$jobIds)->get();
     	$published_date="";
@@ -476,7 +380,7 @@ class Main extends Controller
         $published_on=date_format($published,"l j \ F Y");
     	$JobTitle=$title;
     	$shortL=ShortList::where('job_post_id',$jobIds)->get();
-    	return view('admin.reject-from-shortlist')->with(array('allJobs'=>$allJobs,'jobItemIds'=>$jobItemIds,'title'=>$title,'jobIds'=>$jobIds,'applications'=>$applications,'JobTitle'=>$JobTitle,'published_on'=>$published_on,'ShortList'=>$ShortList,'Interview'=>$Interview,'FinalList'=>$FinalList,'job_applicants'=>$job_applicants,'job_applicants_reject_number'=>$job_applicants_reject_number,'university'=>$university, 'gender'=>$gender,'salary'=>$salary,'company'=>$company,'designation'=>$designation));
+    	return view('admin.reject-from-shortlist')->with(array('allJobs'=>$allJobs,'jobItemIds'=>$jobItemIds,'title'=>$title,'jobIds'=>$jobIds,'applications'=>$applications,'JobTitle'=>$JobTitle,'published_on'=>$published_on,'ShortList'=>$ShortList,'Interview'=>$Interview,'FinalList'=>$FinalList,'job_applicants'=>$job_applicants,'job_applicants_reject_number'=>$job_applicants_reject_number));
 
 
 		
@@ -581,11 +485,6 @@ class Main extends Controller
 
 	 public function interview(Request $request){
 	 	$jobIds=$request->jobIds;
-	 	$university=$request->university;
-		$gender=$request->gender;
-		$salary=$request->salary;
-		$company=$request->company;
-		$designation=$request->designation;
     	$allJobs=JobPost::where('id',$jobIds)->where('deleted',0)->get();
     	$ShortList=ShortList::where('job_post_id',$jobIds)->where('deleted',0)->count();
     	$Interview=Interview::where('job_post_id',$jobIds)->where('deleted',0)->count();
@@ -594,74 +493,7 @@ class Main extends Controller
 
    		$job_applicants_reject_number=Interview::join('users','users.id','=','interviews.user_id')->where('job_post_id',$jobIds)->where('status',0)->where('deleted',1)->count();
 
-   		// $job_applicants=Interview::join('users','users.id','=','interviews.user_id')->where('job_post_id',$jobIds)->where('deleted',0)->get();
-   		if ($request->has('university')) {
-   			
-   		$job_applicants=Interview::join('users','users.id','=','interviews.user_id')->where('job_post_id',$jobIds)->where('Institution','LIKE','%'.$request->university.'%')->where('deleted',0)->paginate(10);
-   		}elseif ($request->has('gender')) {
-   			$job_applicants=Interview::join('users','users.id','=','interviews.user_id')->where('job_post_id',$jobIds)->where('gender',$request->gender)->where('deleted',0)->paginate(10);
-   		}elseif($request->has('salary')){
-   			$job_applicants=Interview::join('users','users.id','=','interviews.user_id')->where('job_post_id',$jobIds)->where('ExpectedSalary',$request->salary)->where('deleted',0)->paginate(10);
-   		}
-   		elseif($request->has('Company',$request->company)){
-   			$job_applicants=Interview::join('users','users.id','=','interviews.user_id')->where('job_post_id',$jobIds)->where('Company','LIKE','%'.$request->company.'%')->where('deleted',0)->paginate(10);
-   		}elseif ($request->has('designation')) {
-   			$job_applicants=Interview::join('users','users.id','=','interviews.user_id')->where('job_post_id',$jobIds)->where('Possition','LIKE','%'.$request->designation.'%')->where('deleted',0)->paginate(10);
-   		}
-   		else{
-
-   		$job_applicants=Interview::join('users','users.id','=','interviews.user_id')->where('job_post_id',$jobIds)->where('deleted',0)->paginate(10);
-   		}
-       	
-      $checkUserAndJob=Interview::where('job_post_id',$jobIds)->get();
-    	$published_date="";
-    	$title="";
-    	$jobItemIds="";
-    	foreach ($allJobs as $job) {
-    		$published_date.=$job->created_at;
-    		$title.=$job->JobTitle;
-    		$jobItemIds.=$job->id;
-    	}
-
-    	$published=date_create($published_date);
-        $published_on=date_format($published,"l j \ F Y");
-    	$JobTitle=$title;
-    	$shortL=ShortList::where('job_post_id',$jobIds)->get();
-    	return view('admin.interview')->with(array('allJobs'=>$allJobs,'jobItemIds'=>$jobItemIds,'title'=>$title,'jobIds'=>$jobIds,'applications'=>$applications,'JobTitle'=>$JobTitle,'published_on'=>$published_on,'ShortList'=>$ShortList,'Interview'=>$Interview,'FinalList'=>$FinalList,'job_applicants'=>$job_applicants,'job_applicants_reject_number'=>$job_applicants_reject_number,'university'=>$university, 'gender'=>$gender,'salary'=>$salary,'company'=>$company,'designation'=>$designation));
-	}
-
-
-	public function reject_applicants_list_from_interview(Request $request){
-		$jobIds=$request->jobIds;
-		$university=$request->university;
-		$gender=$request->gender;
-		$salary=$request->salary;
-		$company=$request->company;
-		$designation=$request->designation;
-    	$allJobs=JobPost::where('id',$jobIds)->where('deleted',0)->get();
-    	$ShortList=ShortList::where('job_post_id',$jobIds)->where('deleted',0)->count();
-    	$Interview=Interview::where('job_post_id',$jobIds)->where('deleted',0)->count();
-    	$FinalList=FinalList::where('job_post_id',$jobIds)->where('deleted',0)->count();
-   		$applications=Interview::where('job_post_id',$jobIds)->count();
-   		$job_applicants_reject_number=Interview::join('users','users.id','=','interviews.user_id')->where('job_post_id',$jobIds)->where('status',0)->where('deleted',1)->count();
-   		// $job_applicants=Interview::join('users','users.id','=','interviews.user_id')->where('job_post_id',$jobIds)->where('status',0)->where('deleted',1)->get();
-   		if ($request->has('university')) {
-   			
-   		$job_applicants=Interview::join('users','users.id','=','interviews.user_id')->where('job_post_id',$jobIds)->where('Institution','LIKE','%'.$request->university.'%')->where('deleted',1)->paginate(10);
-   		}elseif ($request->has('gender')) {
-   			$job_applicants=Interview::join('users','users.id','=','interviews.user_id')->where('job_post_id',$jobIds)->where('gender',$request->gender)->where('deleted',1)->paginate(10);
-   		}elseif($request->has('salary')){
-   			$job_applicants=Interview::join('users','users.id','=','interviews.user_id')->where('job_post_id',$jobIds)->where('ExpectedSalary',$request->salary)->where('deleted',1)->paginate(10);
-   		}
-   		elseif($request->has('Company',$request->company)){
-   			$job_applicants=Interview::join('users','users.id','=','interviews.user_id')->where('job_post_id',$jobIds)->where('Company','LIKE','%'.$request->company.'%')->where('deleted',1)->paginate(10);
-   		}elseif ($request->has('designation')) {
-   			$job_applicants=Interview::join('users','users.id','=','interviews.user_id')->where('job_post_id',$jobIds)->where('Possition','LIKE','%'.$request->designation.'%')->where('deleted',1)->paginate(10);
-   		}
-   		else{
-
-   		$job_applicants=Interview::join('users','users.id','=','interviews.user_id')->where('job_post_id',$jobIds)->where('deleted',1)->paginate(10);
-   		}
+   		$job_applicants=Interview::join('users','users.id','=','interviews.user_id')->where('job_post_id',$jobIds)->where('deleted',0)->get();
        	
        	$checkUserAndJob=Interview::where('job_post_id',$jobIds)->get();
     	$published_date="";
@@ -677,7 +509,35 @@ class Main extends Controller
         $published_on=date_format($published,"l j \ F Y");
     	$JobTitle=$title;
     	$shortL=ShortList::where('job_post_id',$jobIds)->get();
-    	return view('admin.reject-from-interview')->with(array('allJobs'=>$allJobs,'jobItemIds'=>$jobItemIds,'title'=>$title,'jobIds'=>$jobIds,'applications'=>$applications,'JobTitle'=>$JobTitle,'published_on'=>$published_on,'ShortList'=>$ShortList,'Interview'=>$Interview,'FinalList'=>$FinalList,'job_applicants'=>$job_applicants,'job_applicants_reject_number'=>$job_applicants_reject_number,'university'=>$university, 'gender'=>$gender,'salary'=>$salary,'company'=>$company,'designation'=>$designation));
+    	return view('admin.interview')->with(array('allJobs'=>$allJobs,'jobItemIds'=>$jobItemIds,'title'=>$title,'jobIds'=>$jobIds,'applications'=>$applications,'JobTitle'=>$JobTitle,'published_on'=>$published_on,'ShortList'=>$ShortList,'Interview'=>$Interview,'FinalList'=>$FinalList,'job_applicants'=>$job_applicants,'job_applicants_reject_number'=>$job_applicants_reject_number));
+	}
+
+
+	public function reject_applicants_list_from_interview(Request $request){
+		$jobIds=$request->jobIds;
+    	$allJobs=JobPost::where('id',$jobIds)->where('deleted',0)->get();
+    	$ShortList=ShortList::where('job_post_id',$jobIds)->where('deleted',0)->count();
+    	$Interview=Interview::where('job_post_id',$jobIds)->where('deleted',0)->count();
+    	$FinalList=FinalList::where('job_post_id',$jobIds)->where('deleted',0)->count();
+   		$applications=Interview::where('job_post_id',$jobIds)->count();
+   		$job_applicants_reject_number=Interview::join('users','users.id','=','interviews.user_id')->where('job_post_id',$jobIds)->where('status',0)->where('deleted',1)->count();
+   		$job_applicants=Interview::join('users','users.id','=','interviews.user_id')->where('job_post_id',$jobIds)->where('status',0)->where('deleted',1)->get();
+       	
+       	$checkUserAndJob=Interview::where('job_post_id',$jobIds)->get();
+    	$published_date="";
+    	$title="";
+    	$jobItemIds="";
+    	foreach ($allJobs as $job) {
+    		$published_date.=$job->created_at;
+    		$title.=$job->JobTitle;
+    		$jobItemIds.=$job->id;
+    	}
+
+    	$published=date_create($published_date);
+        $published_on=date_format($published,"l j \ F Y");
+    	$JobTitle=$title;
+    	$shortL=ShortList::where('job_post_id',$jobIds)->get();
+    	return view('admin.reject-from-interview')->with(array('allJobs'=>$allJobs,'jobItemIds'=>$jobItemIds,'title'=>$title,'jobIds'=>$jobIds,'applications'=>$applications,'JobTitle'=>$JobTitle,'published_on'=>$published_on,'ShortList'=>$ShortList,'Interview'=>$Interview,'FinalList'=>$FinalList,'job_applicants'=>$job_applicants,'job_applicants_reject_number'=>$job_applicants_reject_number));
 	}
 
 
@@ -773,11 +633,6 @@ class Main extends Controller
 
 	public function finalList(Request $request){
 		$jobIds=$request->jobIds;
-		$university=$request->university;
-		$gender=$request->gender;
-		$salary=$request->salary;
-		$company=$request->company;
-		$designation=$request->designation;
     	$allJobs=JobPost::where('id',$jobIds)->where('deleted',0)->get();
     	$ShortList=ShortList::where('job_post_id',$jobIds)->where('deleted',0)->count();
     	$Interview=Interview::where('job_post_id',$jobIds)->where('deleted',0)->count();
@@ -786,26 +641,8 @@ class Main extends Controller
    		
    		$job_applicants_reject_number=FinalList::join('users','users.id','=','final_lists.user_id')->where('job_post_id',$jobIds)->where('status',0)->where('deleted',1)->count();
 
-   		// $job_applicants=FinalList::join('users','users.id','=','final_lists.user_id')->where('job_post_id',$jobIds)->where('deleted',0)->get();
+   		$job_applicants=FinalList::join('users','users.id','=','final_lists.user_id')->where('job_post_id',$jobIds)->where('deleted',0)->get();
        	
-      if ($request->has('university')) {
-   			
-   		$job_applicants=FinalList::join('users','users.id','=','final_lists.user_id')->where('job_post_id',$jobIds)->where('Institution','LIKE','%'.$request->university.'%')->where('deleted',0)->paginate(10);
-   		}elseif ($request->has('gender')) {
-   			$job_applicants=FinalList::join('users','users.id','=','final_lists.user_id')->where('job_post_id',$jobIds)->where('gender',$request->gender)->where('deleted',0)->paginate(10);
-   		}elseif($request->has('salary')){
-   			$job_applicants=FinalList::join('users','users.id','=','final_lists.user_id')->where('job_post_id',$jobIds)->where('ExpectedSalary',$request->salary)->where('deleted',0)->paginate(10);
-   		}
-   		elseif($request->has('Company',$request->company)){
-   			$job_applicants=FinalList::join('users','users.id','=','final_lists.user_id')->where('job_post_id',$jobIds)->where('Company','LIKE','%'.$request->company.'%')->where('deleted',0)->paginate(10);
-   		}elseif ($request->has('designation')) {
-   			$job_applicants=FinalList::join('users','users.id','=','final_lists.user_id')->where('job_post_id',$jobIds)->where('Possition','LIKE','%'.$request->designation.'%')->where('deleted',0)->paginate(10);
-   		}
-   		else{
-
-   		$job_applicants=FinalList::join('users','users.id','=','final_lists.user_id')->where('job_post_id',$jobIds)->where('deleted',0)->paginate(10);
-   		}
-
        	$checkUserAndJob=ShortList::where('job_post_id',$jobIds)->get();
     	$published_date="";
     	$title="";
@@ -820,16 +657,11 @@ class Main extends Controller
         $published_on=date_format($published,"l j \ F Y");
     	$JobTitle=$title;
     	$shortL=ShortList::where('job_post_id',$jobIds)->get();
-    	return view('admin.final-list')->with(array('allJobs'=>$allJobs,'jobItemIds'=>$jobItemIds,'title'=>$title,'jobIds'=>$jobIds,'applications'=>$applications,'JobTitle'=>$JobTitle,'published_on'=>$published_on,'ShortList'=>$ShortList,'Interview'=>$Interview,'FinalList'=>$FinalList,'job_applicants'=>$job_applicants,'job_applicants_reject_number'=>$job_applicants_reject_number,'university'=>$university, 'gender'=>$gender,'salary'=>$salary,'company'=>$company,'designation'=>$designation));
+    	return view('admin.final-list')->with(array('allJobs'=>$allJobs,'jobItemIds'=>$jobItemIds,'title'=>$title,'jobIds'=>$jobIds,'applications'=>$applications,'JobTitle'=>$JobTitle,'published_on'=>$published_on,'ShortList'=>$ShortList,'Interview'=>$Interview,'FinalList'=>$FinalList,'job_applicants'=>$job_applicants,'job_applicants_reject_number'=>$job_applicants_reject_number));
 	}
 
 	public function reject_applicants_list_from_finallist(Request $request){
 		$jobIds=$request->jobIds;
-    $university=$request->university;
-    $gender=$request->gender;
-    $salary=$request->salary;
-    $company=$request->company;
-    $designation=$request->designation;    
     	$allJobs=JobPost::where('id',$jobIds)->where('deleted',0)->get();
     	$ShortList=ShortList::where('job_post_id',$jobIds)->where('deleted',0)->count();
     	$Interview=Interview::where('job_post_id',$jobIds)->where('deleted',0)->count();
@@ -837,27 +669,9 @@ class Main extends Controller
    		$applications=Application::where('job_post_id',$jobIds)->count();
    		$job_applicants_reject_number=FinalList::join('users','users.id','=','final_lists.user_id')->where('job_post_id',$jobIds)->where('status',0)->where('deleted',1)->count();
 
-   		// $job_applicants=FinalList::join('users','users.id','=','final_lists.user_id')->where('job_post_id',$jobIds)->where('deleted',1)->get();
-
-      if ($request->has('university')) {
-        
-      $job_applicants=FinalList::join('users','users.id','=','final_lists.user_id')->where('job_post_id',$jobIds)->where('Institution','LIKE','%'.$request->university.'%')->where('deleted',1)->paginate(10);
-      }elseif ($request->has('gender')) {
-        $job_applicants=FinalList::join('users','users.id','=','final_lists.user_id')->where('job_post_id',$jobIds)->where('gender',$request->gender)->where('deleted',1)->paginate(10);
-      }elseif($request->has('salary')){
-        $job_applicants=FinalList::join('users','users.id','=','final_lists.user_id')->where('job_post_id',$jobIds)->where('ExpectedSalary',$request->salary)->where('deleted',1)->paginate(10);
-      }
-      elseif($request->has('Company',$request->company)){
-        $job_applicants=FinalList::join('users','users.id','=','final_lists.user_id')->where('job_post_id',$jobIds)->where('Company','LIKE','%'.$request->company.'%')->where('deleted',1)->paginate(10);
-      }elseif ($request->has('designation')) {
-        $job_applicants=FinalList::join('users','users.id','=','final_lists.user_id')->where('job_post_id',$jobIds)->where('Possition','LIKE','%'.$request->designation.'%')->where('deleted',1)->paginate(10);
-      }
-      else{
-
-      $job_applicants=FinalList::join('users','users.id','=','final_lists.user_id')->where('job_post_id',$jobIds)->where('deleted',1)->paginate(10);
-      }
+   		$job_applicants=FinalList::join('users','users.id','=','final_lists.user_id')->where('job_post_id',$jobIds)->where('deleted',1)->get();
        	
-      $checkUserAndJob=ShortList::where('job_post_id',$jobIds)->get();
+       	$checkUserAndJob=ShortList::where('job_post_id',$jobIds)->get();
     	$published_date="";
     	$title="";
     	$jobItemIds="";
@@ -871,7 +685,7 @@ class Main extends Controller
         $published_on=date_format($published,"l j \ F Y");
     	$JobTitle=$title;
     	$shortL=ShortList::where('job_post_id',$jobIds)->get();
-    	return view('admin.reject-from-finallist')->with(array('allJobs'=>$allJobs,'jobItemIds'=>$jobItemIds,'title'=>$title,'jobIds'=>$jobIds,'applications'=>$applications,'JobTitle'=>$JobTitle,'published_on'=>$published_on,'ShortList'=>$ShortList,'Interview'=>$Interview,'FinalList'=>$FinalList,'job_applicants'=>$job_applicants,'job_applicants_reject_number'=>$job_applicants_reject_number,'university'=>$university, 'gender'=>$gender,'salary'=>$salary,'company'=>$company,'designation'=>$designation));
+    	return view('admin.reject-from-finallist')->with(array('allJobs'=>$allJobs,'jobItemIds'=>$jobItemIds,'title'=>$title,'jobIds'=>$jobIds,'applications'=>$applications,'JobTitle'=>$JobTitle,'published_on'=>$published_on,'ShortList'=>$ShortList,'Interview'=>$Interview,'FinalList'=>$FinalList,'job_applicants'=>$job_applicants,'job_applicants_reject_number'=>$job_applicants_reject_number));
 	}
 
 
@@ -984,31 +798,7 @@ class Main extends Controller
 	}
 	
 public function downloadExcelFromApplication(Request $request){
-    $jobIds=$request->jobIds;
-    $university=$request->university;
-    $gender=$request->gender;
-    $salary=$request->salary;
-    $company=$request->company;
-    $designation=$request->designation;
-if ($request->has('university')) {
-      $results=Application::join('users','users.id','=','applications.user_id')->where('job_post_id',$jobIds)->where('Institution','LIKE','%'.$request->university.'%')->where('deleted',0)->get();
-      }elseif ($request->has('gender')) {
-        $results=Application::join('users','users.id','=','applications.user_id')->where('job_post_id',$jobIds)->where('gender',$request->gender)->where('deleted',0)->get();
-      }elseif($request->has('salary')){
-        $results=Application::join('users','users.id','=','applications.user_id')->where('job_post_id',$jobIds)->where('ExpectedSalary',$request->salary)->where('deleted',0)->get();
-      }
-      elseif($request->has('Company',$request->company)){
-        $results=Application::join('users','users.id','=','applications.user_id')->where('job_post_id',$jobIds)->where('Company','LIKE','%'.$request->company.'%')->where('deleted',0)->get();
-      }elseif ($request->has('designation')) {
-        $results=Application::join('users','users.id','=','applications.user_id')->where('job_post_id',$jobIds)->where('Possition','LIKE','%'.$request->designation.'%')->where('deleted',0)->get();
-      }
-      else{
-
-      $results=Application::join('users','users.id','=','applications.user_id')->where('job_post_id',$jobIds)->where('deleted',0)->get();
-      }
-
-// $results=Application::join('users','users.id','=','applications.user_id')->where('job_post_id',$request->jobIds)->where('deleted',0)->get();
-
+$results=Application::join('users','users.id','=','applications.user_id')->where('job_post_id',$request->jobIds)->where('deleted',0)->get();
 Excel::create('applicants_cv', function($excel) use ($results) {
 		$excel->sheet('applicants_cv',function($sheet) use ($results){
 			
@@ -1021,7 +811,7 @@ $results=ShortList::join('users','users.id','=','short_lists.user_id')->where('j
 Excel::create('applicants_cv', function($excel) use ($results) {
 		$excel->sheet('applicants_cv',function($sheet) use ($results){
 			
-	$sheet->loadView('admin.excel')->with('results',$results,'university',$university, 'gender',$gender,'salary',$salary,'company',$company,'designation',$designation);
+	$sheet->loadView('admin.excel')->with('results',$results);
 		});
 	})->export('xlsx');	
 }
@@ -1044,16 +834,5 @@ $results=FinalList::join('users','users.id','=','final_lists.user_id')->where('j
 	$sheet->loadView('admin.excel')->with('results',$results);
 		});
 	})->export('xlsx');
-}
-
-/*Delete function for applicants*/
-public function deleteApplicants(Request $request){
-	// return $request->all();
-	if ($request->ajax()) {
-	$delete=User::where('id',$request->id)->delete();
-	return response()->json(array('data'=>'success'));
-	}
-
-
 }
 }

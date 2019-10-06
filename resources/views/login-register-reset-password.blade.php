@@ -2,10 +2,10 @@
 <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
-<center><div class="panel-heading"><small>Login/Register to</small> <strong class="text-aqua"> Madina Group Job Portal</strong></div></center>
+<center><div class="panel-heading"><small>Login/Register to</small> <strong class="text-aqua"> Feemaa Tech</strong></div></center>
                 <div class="modal-header" align="center">
                  <!--  class="img-circle" id="img_logo" -->
-                    <img   src="{{ asset('storage/admin/images/company-logo.png') }}">
+                    {{-- <img   src="{{ asset('storage/admin/images/company-logo.png') }}"> --}}
                     <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                     </button> -->
@@ -98,23 +98,7 @@
                       <div id="div-register-msg">
                           <div id="icon-register-msg" class="glyphicon glyphicon-chevron-right"></div>
                           <span id="text-register-msg">Register an account.</span>
-                      </div><br>
-                      <div class="form-groupform-group{{ $errors->has('gender') ? ' has-error' : '' }}">
-                        <label>
-                          <input type="radio" name="gender" value="1" class="flat-red form-control" >
-                          Male
-                        </label>
-                        <label>
-                          <input type="radio" name="gender" value="2" class="flat-red form-control">
-                          Female
-                        </label>
-                        @if ($errors->has('gender'))
-                      <span class="help-block">
-                          <strong>{{ $errors->first('gender') }}</strong>
-                      </span>
-                  @endif
-                        
-              </div>
+                      </div>
                   <div class="form-group{{ $errors->has('FirstName') ? ' has-error' : '' }}">
                   <input id="FirstName" type="text" class="form-control" name="FirstName" value="{{ old('FirstName') }}" required autofocus placeholder="First Name">
                   @if ($errors->has('FirstName'))
@@ -186,7 +170,7 @@
                 <div class="form-group">
                     <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required placeholder="Password Confirmation">
                 </div>   
-            </div>
+                        </div>
                   <div class="modal-footer">
                       <div>
                           <button id="registerbtn" type="submit" class="btn btn-primary btn-lg btn-block"><i class="fa fa send"></i> Register</button>
@@ -205,8 +189,3 @@
       </div>
   </div>
 </div>
-<p></p>
-@push('js')
-
-
-@endpush

@@ -12,13 +12,12 @@
 	<head>
 		<tr>
 			<th>SL</th>
-			<th>Name</th>
-			<th>Email</th>
-			<th>Mobile</th>
-			<th>University</th>
-			<th title="Present Company">Company</th>
-			<th title="Present Designation">Designation</th>
+			<th>Mobile Number</th>
+			<th>Present Organization</th>
+			<th>Present Designation</th>
 			<th>Salary Expectation</th>
+			<th>Siganture</th>
+			<th>Remarks</th>
 		</tr>
 	</head>
 	<tbody>
@@ -33,12 +32,12 @@
 			<td>{{$i}}</td>
 			{{-- <td><img src="{{asset('storage/employee_photo/'.$result->Photo)}}" alt="Picture Not Found!"></td> --}}
 			<td>{{$result->FirstName}} {{$result->LastName}}</td>
-			<td>{{$result->email}}</td>
-			<td>{{$result->Phone}}</td>
-			<td>{{$result->Institution}}</td>
 			<td>{{$result->Company}}</td>
 			<td>{{$result->Possition}}</td>
 			<td>{{$result->ExpectedSalary}}</td>
+			<td>{{$result->Position}}</td>
+			<td></td>
+			<td></td>
 		</tr>
 		@endforeach
 	</tbody>
